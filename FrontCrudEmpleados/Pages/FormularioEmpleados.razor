@@ -1,0 +1,114 @@
+﻿<EditForm Model="Empleado" OnValidSubmit="OnDataAnnotationsValidated">
+    <DataAnnotationsValidator />
+
+    <div class="mb-3">
+        <label>Nombre:</label>
+        <div>
+            <InputText class="form-control" @bind-Value="@Empleado.Nombre" />
+            <ValidationMessage For="@(()=> Empleado.Nombre)" />
+        </div>
+    </div>
+    <div class="mb-3">
+        <label>Apellido:</label>
+        <div>
+            <InputText class="form-control" @bind-Value="@Empleado.Apellido" />
+            <ValidationMessage For="@(()=> Empleado.Apellido)" />
+        </div>
+    </div>
+    <div class="mb-3">
+        <label>Cargo:</label>
+        <div>
+            <InputText class="form-control" @bind-Value="@Empleado.Cargo" />
+            <ValidationMessage For="@(()=> Empleado.Cargo)" />
+        </div>
+    </div>
+    <div class="mb-3">
+        <label>Edad:</label>
+        <div>
+            <InputNumber class="form-control" @bind-Value="@Empleado.Edad" />
+            <ValidationMessage For="@(() => Empleado.Edad)" />
+        </div>
+    </div>
+    <div class="mb-3">
+        <label>Pais:</label>
+        <div>
+            <InputText class="form-control" @bind-Value="@Empleado.Pais" />
+            <ValidationMessage For="@(()=> Empleado.Pais)" />
+        </div>
+    </div>
+    <div class="mb-3">
+        <label>Linea1:</label>
+        <div>
+            <InputText class="form-control" @bind-Value="@Empleado.Linea1" />
+            <ValidationMessage For="@(()=> Empleado.Linea1)" />
+        </div>
+    </div>
+    <div class="mb-3">
+        <label>Linea2:</label>
+        <div>
+            <InputText class="form-control" @bind-Value="@Empleado.Linea2" />
+            <ValidationMessage For="@(()=> Empleado.Linea2)" />
+        </div>
+    </div>
+    <div class="mb-3">
+        <label>Ciudad:</label>
+        <div>
+            <InputText class="form-control" @bind-Value="@Empleado.Ciudad" />
+            <ValidationMessage For="@(()=> Empleado.Ciudad)" />
+        </div>
+    </div>
+    <div class="mb-3">
+        <label>Departamento:</label>
+        <div>
+            <InputText class="form-control" @bind-Value="@Empleado.Departamento" />
+            <ValidationMessage For="@(()=> Empleado.Departamento)" />
+        </div>
+    </div>
+
+    <div class="mb-3">
+        <InputImg Label="Foto" ImagenSeleccionada="ImagenSeleccionada" ImagenURL="@imagenURL"/>
+    </div>  
+
+    <button class="btn btn-success">Guardar Cambios</button>
+</EditForm>
+
+
+@code {
+    string? imagenURL;
+
+    [Parameter]
+    [EditorRequired]
+    public Empleado Empleado { get; set; } = null!;
+
+    [Parameter]
+    [EditorRequired]
+    public EventCallback OnValidSubmit { get; set; }
+
+
+
+    protected override void OnInitialized()
+    {
+        if (!string.IsNullOrEmpty(Empleado.UrlFoto))
+        {
+            imagenURL = Empleado.UrlFoto;
+            Empleado.UrlFoto = " ";
+        }
+        
+
+        
+    }
+
+
+    private void ImagenSeleccionada(string imagenBase64)
+    {
+        Empleado.UrlFoto = imagenBase64;
+        imagenURL = null;
+    }
+
+ 
+
+    private async Task OnDataAnnotationsValidated()
+    {
+        await OnValidSubmit.InvokeAsync();
+    }
+}
