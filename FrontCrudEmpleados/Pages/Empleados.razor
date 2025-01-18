@@ -1,0 +1,110 @@
+﻿@page "/empleados"
+@using FrontCrudEmpleados.Entities.DTOs
+@using FrontCrudEmpleados.Repositorios
+
+@inject IRepositorio repositorio
+
+<h3>Empleados</h3>
+<a class="btn btn-success btn-sm mb-3" href="CrearEmpleado">Nuevo Empleado</a>
+
+<table class="table table-bordered">
+    <thead class="table-dark">
+        <tr>
+            <th>Foto</th>
+            <th>Nombre Completo</th>
+            <th>Cargo</th>
+            <th>Edad</th>
+            <th>País</th>
+            <th>Dirección</th>
+            <th>Activo</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (listaEmpleado == null)
+        {
+            <tr>
+                <td colspan="8" align="center">
+                    <img style="width:50px" src="https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif" />
+                </td>
+            </tr>
+        }
+        else if (!listaEmpleado.Any())
+        {
+            <tr>
+                <td colspan="8" align="center">No hay empleados registrados.</td>
+            </tr>
+        }
+        else
+        {
+            @foreach (var item in listaEmpleado)
+            {
+                <tr>
+                    <td>
+                        @if (!string.IsNullOrWhiteSpace(item.UrlFoto))
+                        {
+                            <img src="@item.UrlFoto" alt="Foto de @item.NombreCompleto" style="width: 60px; height: 60px; object-fit: cover; border-radius: 50%;" />
+                        }
+                        else
+                        {
+                            <img src="https://via.placeholder.com/60" alt="Sin foto" style="width: 60px; height: 60px; object-fit: cover; border-radius: 50%;" />
+                        }
+                    </td>
+                    <td>@item.NombreCompleto</td>
+                    <td>@item.Cargo</td>
+                    <td>@item.Edad años</td>
+                    <td>@item.Direccion.Pais</td>
+                    <td>
+                        @item.Direccion.Linea1, @item.Direccion.Linea2<br />
+                        @item.Direccion.Ciudad, @item.Direccion.Departamento
+                    </td>
+                    <td>@(item.Active ? "Sí" : "No")</td>
+                    <td>
+                        <a class="btn btn-primary btn-sm" href="EditarEmpleado/@item.Id">
+                            <i class="oi oi-pencil"></i> Editar
+                        </a>
+                        <button type="button" class="btn btn-danger btn-sm ms-2" @* @onclick="(() => Eliminar(item.Id))" *@>
+                            <i class="oi oi-trash"></i> Estado
+                        </button>
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+
+@code {
+    private List<EmpleadosDTO>? listaEmpleado;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await CargarEmpleados();
+    }
+
+    private async Task CargarEmpleados()
+    {
+        var respuesta = await repositorio.Get<List<EmpleadosDTO>>("api/empleados");
+
+        if (!respuesta.Error)
+        {
+            listaEmpleado = respuesta.Response!;
+        }
+        else
+        {
+            listaEmpleado = new List<EmpleadosDTO>(); 
+        }
+    }
+
+    // private async Task Eliminar(string id)
+    // {
+    //     var respuesta = await repositorio.Delete($"api/empleados/{id}");
+    //     if (!respuesta.Error)
+    //     {
+    //         await CargarEmpleados();
+    //     }
+    //     else
+    //     {
+    //         Console.WriteLine($"Error al eliminar el empleado con ID: {id}");
+    //     }
+    // }
+}
