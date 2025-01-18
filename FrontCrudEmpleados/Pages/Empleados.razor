@@ -1,8 +1,13 @@
 ﻿@page "/empleados"
 @using FrontCrudEmpleados.Entities.DTOs
 @using FrontCrudEmpleados.Repositorios
-
+@using CurrieTechnologies.Razor.SweetAlert2
+@inject SweetAlertService swal
+@inject NavigationManager navigationManager
 @inject IRepositorio repositorio
+@inject IRepositorio repositorio
+<h3>Bienvenido</h3>
+
 
 <h3>Empleados</h3>
 <a class="btn btn-success btn-sm mb-3" href="CrearEmpleado">Nuevo Empleado</a>
@@ -60,11 +65,11 @@
                     </td>
                     <td>@(item.Active ? "Sí" : "No")</td>
                     <td>
-                        <a class="btn btn-primary btn-sm" href="EditarEmpleado/@item.Id">
+                        <a class="btn btn-primary btn-sm" href="@($"EditarEmpleado/{item.Id}")">
                             <i class="oi oi-pencil"></i> Editar
                         </a>
-                        <button type="button" class="btn btn-danger btn-sm ms-2" @* @onclick="(() => Eliminar(item.Id))" *@>
-                            <i class="oi oi-trash"></i> Estado
+                        <button type="button" class="btn btn-danger btn-sm ms-2" @onclick="() => Desactivar(item.Id)" *@>
+                            <i class="oi oi-trash"></i> Desactivar
                         </button>
                     </td>
                 </tr>
@@ -94,17 +99,26 @@
             listaEmpleado = new List<EmpleadosDTO>(); 
         }
     }
+    async Task  Desactivar(string EmpleadoId)
+    {
 
-    // private async Task Eliminar(string id)
-    // {
-    //     var respuesta = await repositorio.Delete($"api/empleados/{id}");
-    //     if (!respuesta.Error)
-    //     {
-    //         await CargarEmpleados();
-    //     }
-    //     else
-    //     {
-    //         Console.WriteLine($"Error al eliminar el empleado con ID: {id}");
-    //     }
-    // }
+        var httpResponse = await repositorio.DeleteEmpleado<Empleado>($"api/Empleados/delete/{EmpleadoId}");
+
+
+
+        if (httpResponse.Error)
+        {
+            var mensajeError = await httpResponse.ObtenerMensajeError();
+            await swal.FireAsync("Error", mensajeError, SweetAlertIcon.Error);
+        }
+        else
+        {
+            
+
+            navigationManager
+                .NavigateTo($"/empleados");
+        }
+    }
+
+    
 }

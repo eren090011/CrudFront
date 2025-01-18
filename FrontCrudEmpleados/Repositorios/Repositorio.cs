@@ -80,6 +80,12 @@ namespace FrontCrudEmpleados.Repositorios
             var responseHttp = await httpClient.PutAsync(url, enviarContent);
             return new HttpResponseWrapper<object>(null, !responseHttp.IsSuccessStatusCode, responseHttp);
         }
+        public async Task<HttpResponseWrapper<object>> DeleteEmpleado<T>(string url)
+        {
+
+            var responseHttp = await httpClient.PutAsync(url, null);
+            return new HttpResponseWrapper<object>(null, !responseHttp.IsSuccessStatusCode, responseHttp);
+        }
 
     }
 }

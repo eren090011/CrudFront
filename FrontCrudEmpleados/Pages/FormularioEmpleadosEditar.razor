@@ -1,6 +1,6 @@
 ﻿<EditForm Model="Empleado" OnValidSubmit="OnDataAnnotationsValidated">
     <DataAnnotationsValidator />
-   @Empleado.Linea1
+
     <div class="mb-3">
         <label>Primer nombre:</label>
         <div>
@@ -65,9 +65,7 @@
         </div>
     </div>
 
-    <div class="mb-3">
-        <InputImg Label="Foto" ImagenSeleccionada="ImagenSeleccionada" ImagenURL="@Empleado.UrlFoto"/>
-    </div>  
+
 
     <button class="btn btn-success">Guardar Cambios</button>
 </EditForm>
@@ -88,18 +86,22 @@
 
     protected override void OnInitialized()
     {
-       
+
+
         if (!string.IsNullOrEmpty(Empleado.UrlFoto))
         {
             imagenURL = Empleado.UrlFoto;
             Empleado.UrlFoto = " ";
-        }else{
+
+        }
+        else
+        {
             imagenURL = Empleado.UrlFoto;
         }
-        
-        
 
-        
+
+
+
     }
 
 
@@ -109,7 +111,7 @@
         imagenURL = null;
     }
 
- 
+
 
     private async Task OnDataAnnotationsValidated()
     {

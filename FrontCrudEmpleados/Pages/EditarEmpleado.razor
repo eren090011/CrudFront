@@ -7,10 +7,9 @@
 @inject IRepositorio repositorio
 
 <h3>Editar Empleado</h3>
-<h2>ID: @EmpleadoId</h2>
+
 <FormularioEmpleadosEditar Empleado="Empleado" OnValidSubmit="Editar" />
 @code
-
 {
     [Parameter] public String EmpleadoId { get; set; }
     private Empleado Empleado = new Empleado();
@@ -20,7 +19,7 @@
     {
         var respuestaHTTP = await repositorio.GetById<EmpleadoDTO>($"api/Empleados/{EmpleadoId}");
         EmpleadoDTO empleadoDTO = respuestaHTTP.Response!;
-        if(empleadoDTO is not null)
+        if (empleadoDTO is not null)
         {
             string nombreCompleto = empleadoDTO.NombreCompleto;
             string[] partes = nombreCompleto.Split(' ');
@@ -29,17 +28,17 @@
             Empleado.Id = empleadoDTO.Id;
             Empleado.Nombre = Nombre;
             Empleado.Apellido = Apellido;
-            Empleado.Pais = empleadoDTO.Pais;
             Empleado.Cargo = empleadoDTO.Cargo;
             Empleado.Edad = empleadoDTO.Edad;
             Empleado.UrlFoto = empleadoDTO.UrlFoto;
-            Empleado.Linea1 = empleadoDTO.Linea1;
-            Empleado.Linea2 = empleadoDTO.Linea2;
-            Empleado.Ciudad = empleadoDTO.Ciudad;
-            Empleado.Departamento = empleadoDTO.Departamento;
+            Empleado.Pais = empleadoDTO.Direccion.Pais;
+            Empleado.Linea1 = empleadoDTO.Direccion.Linea1;
+            Empleado.Linea2 = empleadoDTO.Direccion.Linea2;
+            Empleado.Ciudad = empleadoDTO.Direccion.Ciudad;
+            Empleado.Departamento = empleadoDTO.Direccion.Departamento;
             Empleado.Active = empleadoDTO.Active;
         }
-        
+
 
 
 
@@ -48,6 +47,10 @@
 
     async Task Editar()
     {
+        if (string.IsNullOrEmpty(Empleado.UrlFoto))
+        {
+            Empleado.UrlFoto = " ";
+        }
         var httpResponse = await repositorio.Put<Empleado>($"api/Empleados/{EmpleadoId}", Empleado);
 
         Console.WriteLine(httpResponse.Response);
@@ -65,4 +68,4 @@
                 .NavigateTo($"/");
         }
     }
-} 
+}  
