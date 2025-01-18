@@ -28,7 +28,7 @@ namespace FrontCrudEmpleados.Repositorios
             }
             else if (codigoEstatus == HttpStatusCode.BadRequest)
             {
-                return await HttpResponseMessage.Content.ReadAsStringAsync();
+                return "Te faltan campos por llenar"; 
 
             }
             else if (codigoEstatus == HttpStatusCode.Unauthorized)

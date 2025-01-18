@@ -1,13 +1,10 @@
-﻿@page "/empleados"
+﻿@page "/"
 @using FrontCrudEmpleados.Entities.DTOs
 @using FrontCrudEmpleados.Repositorios
 @using CurrieTechnologies.Razor.SweetAlert2
 @inject SweetAlertService swal
 @inject NavigationManager navigationManager
 @inject IRepositorio repositorio
-@inject IRepositorio repositorio
-<h3>Bienvenido</h3>
-
 
 <h3>Empleados</h3>
 <a class="btn btn-success btn-sm mb-3" href="CrearEmpleado">Nuevo Empleado</a>
@@ -68,7 +65,8 @@
                         <a class="btn btn-primary btn-sm" href="@($"EditarEmpleado/{item.Id}")">
                             <i class="oi oi-pencil"></i> Editar
                         </a>
-                        <button type="button" class="btn btn-danger btn-sm ms-2" @onclick="() => Desactivar(item.Id)" *@>
+                        <!-- Corregido el @onclick -->
+                        <button type="button" class="btn btn-danger btn-sm ms-2" @onclick="() => Desactivar(item.Id)">
                             <i class="oi oi-trash"></i> Desactivar
                         </button>
                     </td>
@@ -96,15 +94,13 @@
         }
         else
         {
-            listaEmpleado = new List<EmpleadosDTO>(); 
+            listaEmpleado = new List<EmpleadosDTO>();
         }
     }
-    async Task  Desactivar(string EmpleadoId)
+
+    async Task Desactivar(string EmpleadoId)
     {
-
         var httpResponse = await repositorio.DeleteEmpleado<Empleado>($"api/Empleados/delete/{EmpleadoId}");
-
-
 
         if (httpResponse.Error)
         {
@@ -113,12 +109,7 @@
         }
         else
         {
-            
-
-            navigationManager
-                .NavigateTo($"/empleados");
+            await CargarEmpleados();
         }
     }
-
-    
 }
