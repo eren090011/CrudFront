@@ -16,7 +16,7 @@
             Ciudad = ciudad;
             Departamento = departamento;
         }
-
+        public Empleado() { }
         public String Id {  get; set; }
         public string Nombre { get; set; }
         public string Apellido { get; set; }
