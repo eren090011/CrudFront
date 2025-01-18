@@ -2,14 +2,14 @@
     <DataAnnotationsValidator />
 
     <div class="mb-3">
-        <label>Nombre:</label>
+        <label>Primer nombre:</label>
         <div>
             <InputText class="form-control" @bind-Value="@Empleado.Nombre" />
             <ValidationMessage For="@(()=> Empleado.Nombre)" />
         </div>
     </div>
     <div class="mb-3">
-        <label>Apellido:</label>
+        <label>Primer apellido:</label>
         <div>
             <InputText class="form-control" @bind-Value="@Empleado.Apellido" />
             <ValidationMessage For="@(()=> Empleado.Apellido)" />
@@ -37,14 +37,14 @@
         </div>
     </div>
     <div class="mb-3">
-        <label>Linea1:</label>
+        <label>Linea 1:</label>
         <div>
             <InputText class="form-control" @bind-Value="@Empleado.Linea1" />
             <ValidationMessage For="@(()=> Empleado.Linea1)" />
         </div>
     </div>
     <div class="mb-3">
-        <label>Linea2:</label>
+        <label>Linea 2:</label>
         <div>
             <InputText class="form-control" @bind-Value="@Empleado.Linea2" />
             <ValidationMessage For="@(()=> Empleado.Linea2)" />

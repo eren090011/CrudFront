@@ -1,0 +1,39 @@
+﻿@page "/CrearEmpleado"
+
+@using CurrieTechnologies.Razor.SweetAlert2
+@inject SweetAlertService swal
+@inject NavigationManager navigationManager
+@inject IRepositorio repositorio
+
+<h3>Crear Empleado</h3>
+<FormularioEmpleados Empleado="Empleado" OnValidSubmit="Crear" />
+@code
+{
+    private Empleado Empleado = new Empleado();
+
+    public bool MostrarFormulario { get; set; } = false;
+    protected async override Task OnInitializedAsync()
+    {
+
+        MostrarFormulario = true;
+    }
+    async Task Crear()
+    {
+        var httpResponse = await repositorio.Post<Empleado>("api/Empleados", Empleado);
+
+        Console.WriteLine(httpResponse.Response);
+
+        if (httpResponse.Error)
+        {
+            var mensajeError = await httpResponse.ObtenerMensajeError();
+            await swal.FireAsync("Error", mensajeError, SweetAlertIcon.Error);
+        }
+        else
+        {
+            // aca se navega inicio otra vez
+
+            navigationManager
+                .NavigateTo($"/");
+        }
+    }
+} 

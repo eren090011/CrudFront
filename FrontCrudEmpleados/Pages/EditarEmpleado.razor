@@ -1,0 +1,44 @@
+﻿@page "/EditarEmpleado/{EmpleadoId}"
+
+@using CurrieTechnologies.Razor.SweetAlert2
+@inject SweetAlertService swal
+@inject NavigationManager navigationManager
+@inject IRepositorio repositorio
+
+<h3>Editar Empleado</h3>
+<h2>ID: @EmpleadoId</h2>
+<FormularioEmpleados Empleado="Empleado" OnValidSubmit="Crear" />
+@code
+
+{
+    [Parameter] public String EmpleadoId { get; set; }
+    private Empleado Empleado = new Empleado();
+
+    
+    protected async override Task OnInitializedAsync()
+    {
+        var respuesta = await repositorio.GetById<Empleado>($"api/Empleados/{EmpleadoId}");
+        
+    }
+
+
+    async Task Crear()
+    {
+        var httpResponse = await repositorio.Post<Empleado>("api/Empleados", Empleado);
+
+        Console.WriteLine(httpResponse.Response);
+
+        if (httpResponse.Error)
+        {
+            var mensajeError = await httpResponse.ObtenerMensajeError();
+            await swal.FireAsync("Error", mensajeError, SweetAlertIcon.Error);
+        }
+        else
+        {
+            // aca se navega inicio otra vez
+
+            navigationManager
+                .NavigateTo($"/");
+        }
+    }
+} 

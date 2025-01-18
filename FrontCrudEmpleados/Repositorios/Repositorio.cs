@@ -4,13 +4,15 @@ using FrontCrudEmpleados.Entities;
 
 namespace FrontCrudEmpleados.Repositorios
 {
-    public class Repositorio: IRepositorio
+    public class Repositorio : IRepositorio
     {
         private readonly HttpClient httpClient;
         public Repositorio(HttpClient httpClient)
         {
             this.httpClient = httpClient;
         }
+
+
         public async Task<HttpResponseWrapper<object>> Delete(string url)
         {
             var responseHTTP = await httpClient.DeleteAsync(url);
@@ -35,23 +37,8 @@ namespace FrontCrudEmpleados.Repositorios
                 return new HttpResponseWrapper<T>(default, error: true, respuestaHTTP);
             }
         }
-        // esta es
-        public async Task<HttpResponseWrapper<TResponse>> Post<T, TResponse>(string url, T enviar)
-        {
-            var enviarJSON = JsonSerializer.Serialize(enviar);
-            var enviarContent = new StringContent(enviarJSON, Encoding.UTF8, "application/json");
-            var responseHttp = await httpClient.PostAsync(url, enviarContent);
+        
 
-            if (responseHttp.IsSuccessStatusCode)
-            {
-                var response = await DeserializarRespuesta<TResponse>(responseHttp,
-                    OpcionesPorDefectoJSON);
-                return new HttpResponseWrapper<TResponse>(response, error: false, responseHttp);
-            }
-
-            return new HttpResponseWrapper<TResponse>(default,
-                !responseHttp.IsSuccessStatusCode, responseHttp);
-        }
 
 
         private async Task<T> DeserializarRespuesta<T>(HttpResponseMessage httpResponse,
@@ -70,9 +57,21 @@ namespace FrontCrudEmpleados.Repositorios
             return new HttpResponseWrapper<object>(null, !responseHttp.IsSuccessStatusCode, responseHttp);
         }
 
-        List<Empleado> IRepositorio.ObtenerPeliculas()
+
+        public async Task<HttpResponseWrapper<T>> GetById<T>(string url)
         {
-            throw new NotImplementedException();
+            var respuestaHTTP = await httpClient.GetAsync(url);
+
+            if (respuestaHTTP.IsSuccessStatusCode)
+            {
+                var respuesta = await DeserializarRespuesta<T>(respuestaHTTP, OpcionesPorDefectoJSON);
+                return new HttpResponseWrapper<T>(respuesta, error: false, respuestaHTTP);
+            }
+            else
+            {
+                return new HttpResponseWrapper<T>(default, error: true, respuestaHTTP);
+            }
         }
+        
     }
 }
