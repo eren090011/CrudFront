@@ -2,7 +2,7 @@
 {
     public class Empleado
     {
-        public Empleado(string id, string nombre, string apellido, string cargo, int edad, string? urlFoto, string pais, string linea1, string linea2, string ciudad, string departamento)
+        public Empleado(string id, string nombre, string apellido, string cargo, int edad, string? urlFoto, string pais, string linea1, string linea2, string ciudad, string departamento, bool active)
         {
             Id = id;
             Nombre = nombre;
@@ -15,9 +15,11 @@
             Linea2 = linea2;
             Ciudad = ciudad;
             Departamento = departamento;
+            Active = active;
+
         }
         public Empleado() { }
-        public String Id {  get; set; }
+        public string Id {  get; set; }
         public string Nombre { get; set; }
         public string Apellido { get; set; }
         public string Cargo { get; set; }
@@ -28,5 +30,6 @@
         public string Linea2 { get; set; }
         public string Ciudad { get; set; }
         public string Departamento { get; set; }
+        public bool Active { get; set; }
     }
 }
