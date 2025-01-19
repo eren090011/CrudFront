@@ -17,6 +17,7 @@
     <thead class="table-dark">
         <tr>
             <th>Foto</th>
+            <th>Id</th>
             <th>Nombre Completo</th>
             <th>Cargo</th>
             <th>Edad</th>
@@ -56,6 +57,7 @@
                             <img src="https://via.placeholder.com/60" alt="Sin foto" style="width: 60px; height: 60px; object-fit: cover; border-radius: 50%;" />
                         }
                     </td>
+                    <td>@item.Id</td>
                     <td>@item.NombreCompleto</td>
                     <td>@item.Cargo</td>
                     <td>@item.Edad años</td>
@@ -66,13 +68,14 @@
                     </td>
                     <td>@(item.Active ? "Sí" : "No")</td>
                     <td>
-                        <a class="btn btn-primary btn-sm" href="@($"EditarEmpleado/{item.Id}")">
-                            <i class="oi oi-pencil"></i> Editar
-                        </a>
-                        <!-- Corregido el @onclick -->
-                        <button type="button" class="btn btn-danger btn-sm ms-2" @onclick="() => Desactivar(item.Id)">
-                            <i class="oi oi-trash"></i> Desactivar
-                        </button>
+                        <div class="d-flex flex-column">
+                            <a class="btn btn-primary btn-sm mb-2" href="@($"EditarEmpleado/{item.Id}")">
+                                <i class="oi oi-pencil"></i> Editar
+                            </a>
+                            <button type="button" class="btn btn-danger btn-sm" @onclick="() => Desactivar(item.Id)">
+                                <i class="oi oi-trash"></i> Desactivar
+                            </button>
+                        </div>
                     </td>
                 </tr>
             }

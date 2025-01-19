@@ -1,6 +1,21 @@
 ﻿<EditForm Model="Empleado" OnValidSubmit="OnDataAnnotationsValidated">
     <DataAnnotationsValidator />
-
+    
+        @if (!string.IsNullOrWhiteSpace(Empleado.UrlFoto))
+        {
+            <div class="mb-3">
+                <label>Foto:</label>
+                <div class="card" style="width: 18rem;">
+            
+                    <img src="@Empleado.UrlFoto" class="card-img-top" />
+                </div>
+            </div>
+            <div class="mb-3">
+            <a href="@($"/CambiarFoto/{Empleado.Id}")" class="btn btn-secondary">Cambiar foto</a>
+            </div>
+            
+        }
+    
     <div class="mb-3">
         <label>Primer nombre:</label>
         <div>

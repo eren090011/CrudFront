@@ -11,12 +11,6 @@
 {
     private Empleado Empleado = new Empleado();
 
-    public bool MostrarFormulario { get; set; } = false;
-    protected async override Task OnInitializedAsync()
-    {
-
-        MostrarFormulario = true;
-    }
     async Task Crear()
     {
         var httpResponse = await repositorio.Post<Empleado>("api/Empleados", Empleado);

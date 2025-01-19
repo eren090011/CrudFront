@@ -1,0 +1,52 @@
+﻿<EditForm Model="Empleado" OnValidSubmit="OnDataAnnotationsValidated">
+    <DataAnnotationsValidator />
+
+
+    <div class="mb-3">
+        <InputImg Label="Foto" ImagenSeleccionada="ImagenSeleccionada" ImagenURL="@imagenURL" />
+    </div>
+
+    <button class="btn btn-success">Cambiar Foto</button>
+    <a href="@($"EditarEmpleado/{Empleado.Id}")" class="btn btn-secondary">Cancelar</a>
+
+</EditForm>
+
+
+@code {
+    string? imagenURL;
+
+    [Parameter]
+    [EditorRequired]
+    public Empleado Empleado { get; set; } = null!;
+
+    [Parameter]
+    [EditorRequired]
+    public EventCallback OnValidSubmit { get; set; }
+
+
+
+    protected override void OnInitialized()
+    {
+        if (!string.IsNullOrEmpty(Empleado.UrlFoto))
+        {
+            imagenURL = Empleado.UrlFoto;
+            Empleado.UrlFoto = " ";
+        }
+
+
+    }
+
+
+    private void ImagenSeleccionada(string imagenBase64)
+    {
+        Empleado.UrlFoto = imagenBase64;
+        imagenURL = null;
+    }
+
+
+
+    private async Task OnDataAnnotationsValidated()
+    {
+        await OnValidSubmit.InvokeAsync();
+    }
+}

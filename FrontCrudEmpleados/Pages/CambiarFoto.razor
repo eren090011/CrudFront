@@ -1,0 +1,67 @@
+﻿@page "/CambiarFoto/{EmpleadoId}"
+@using CurrieTechnologies.Razor.SweetAlert2
+@inject SweetAlertService swal
+@inject NavigationManager navigationManager
+@inject IRepositorio repositorio
+
+<h3>Cambia tu foto</h3>
+<div class="mb-3">
+    <FormularioFoto Empleado="Empleado" OnValidSubmit="Cambiar" />
+</div>
+@code {
+    
+    [Parameter] public string EmpleadoId { get; set; }
+    private Empleado Empleado = new Empleado();
+
+
+    protected async override Task OnInitializedAsync()
+    {
+        var respuestaHTTP = await repositorio.GetById<EmpleadoDTO>($"api/Empleados/{EmpleadoId}");
+        EmpleadoDTO empleadoDTO = respuestaHTTP.Response!;
+        if (empleadoDTO is not null)
+        {
+            string nombreCompleto = empleadoDTO.NombreCompleto;
+            string[] partes = nombreCompleto.Split(' ');
+            string Nombre = partes[0];
+            string Apellido = partes[1];
+            Empleado.Id = empleadoDTO.Id;
+            Empleado.Nombre = Nombre;
+            Empleado.Apellido = Apellido;
+            Empleado.Cargo = empleadoDTO.Cargo;
+            Empleado.Edad = empleadoDTO.Edad;
+            //Empleado.UrlFoto = empleadoDTO.UrlFoto;
+            Empleado.Pais = empleadoDTO.Direccion.Pais;
+            Empleado.Linea1 = empleadoDTO.Direccion.Linea1;
+            Empleado.Linea2 = empleadoDTO.Direccion.Linea2;
+            Empleado.Ciudad = empleadoDTO.Direccion.Ciudad;
+            Empleado.Departamento = empleadoDTO.Direccion.Departamento;
+            Empleado.Active = empleadoDTO.Active;
+        }
+
+
+
+
+    }
+
+
+    async Task Cambiar()
+    {
+        
+        var httpResponse = await repositorio.PutFoto<Empleado>($"api/Empleados/cambiarFoto/{EmpleadoId}", Empleado);
+
+        Console.WriteLine(httpResponse.Response);
+
+        if (httpResponse.Error)
+        {
+            var mensajeError = await httpResponse.ObtenerMensajeError();
+            await swal.FireAsync("Error", mensajeError, SweetAlertIcon.Error);
+        }
+        else
+        {
+            
+            navigationManager
+                .NavigateTo($"EditarEmpleado/{Empleado.Id}");
+        }
+    }
+
+}
