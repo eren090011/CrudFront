@@ -1,0 +1,64 @@
+﻿@page "/DetalleEmpleado/{Id}"
+@using CurrieTechnologies.Razor.SweetAlert2
+@using FrontCrudEmpleados.Entities.DTOs
+@using FrontCrudEmpleados.Repositorios
+@inject IRepositorio repositorio
+@inject NavigationManager navigationManager
+@inject SweetAlertService swal
+
+<h3>Detalles del Empleado</h3>
+
+@if (empleado == null)
+{
+    <p>Cargando...</p>
+}
+else
+{
+    <div class="card" style="width: 18rem;">
+        @if (!string.IsNullOrWhiteSpace(empleado.UrlFoto))
+        {
+            <img src="@empleado.UrlFoto" class="card-img-top" alt="Foto de @empleado.NombreCompleto" />
+        }
+        else
+        {
+            <img src="https://via.placeholder.com/150" class="card-img-top" alt="Sin foto" />
+        }
+        <div class="card-body">
+            <h5 class="card-title">@empleado.NombreCompleto</h5>
+            <p class="card-text"><strong>Cargo:</strong> @empleado.Cargo</p>
+            <p class="card-text"><strong>Edad:</strong> @empleado.Edad años</p>
+            <p class="card-text"><strong>País:</strong> @empleado.Direccion.Pais</p>
+            <p class="card-text">
+                <strong>Dirección:</strong><br />
+                @empleado.Direccion.Linea1, @empleado.Direccion.Linea2<br />
+                @empleado.Direccion.Ciudad, @empleado.Direccion.Departamento
+            </p>
+            <a href="/" class="btn btn-secondary">Volver</a>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter] public string Id { get; set; }
+    private EmpleadosDTO? empleado;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await CargarEmpleado();
+    }
+
+    private async Task CargarEmpleado()
+    {
+        var respuesta = await repositorio.GetById<EmpleadosDTO>($"api/empleados/{Id}");
+
+        if (!respuesta.Error && respuesta.Response != null)
+        {
+            empleado = respuesta.Response;
+        }
+        else
+        {
+            await swal.FireAsync("Error", "Empleado no encontrado.", SweetAlertIcon.Error);
+            navigationManager.NavigateTo("/");
+        }
+    }
+}

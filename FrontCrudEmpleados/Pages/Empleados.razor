@@ -7,6 +7,10 @@
 @inject IRepositorio repositorio
 
 <h3>Empleados</h3>
+<div class="input-group mb-3">
+    <input type="text" @bind="idBusqueda" placeholder="Buscar empleado por ID" class="form-control" />
+    <button class="btn btn-primary" @onclick="BuscarEmpleado">Buscar</button>
+</div>
 <a class="btn btn-success btn-sm mb-3" href="CrearEmpleado">Nuevo Empleado</a>
 
 <table class="table table-bordered">
@@ -78,6 +82,7 @@
 
 @code {
     private List<EmpleadosDTO>? listaEmpleado;
+    private string idBusqueda = string.Empty;
 
     protected override async Task OnInitializedAsync()
     {
@@ -95,6 +100,26 @@
         else
         {
             listaEmpleado = new List<EmpleadosDTO>();
+        }
+    }
+
+    private async Task BuscarEmpleado()
+    {
+        if (string.IsNullOrWhiteSpace(idBusqueda))
+        {
+            await swal.FireAsync("Error", "Debes ingresar un ID para buscar.", SweetAlertIcon.Warning);
+            return;
+        }
+
+        var respuesta = await repositorio.GetById<EmpleadosDTO>($"api/empleados/{idBusqueda}");
+
+        if (!respuesta.Error && respuesta.Response != null)
+        {
+            navigationManager.NavigateTo($"/DetalleEmpleado/{idBusqueda}");
+        }
+        else
+        {
+            await swal.FireAsync("Error", "Empleado no encontrado.", SweetAlertIcon.Error);
         }
     }
 
